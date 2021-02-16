@@ -7,6 +7,7 @@
 class Node():
     def __init__(self, n):
         self.name = n
+        self.parent = 0
 
     def __hash__(self):
         return hash(self.name)
@@ -73,13 +74,65 @@ class Graph():
     ### return a list of Nodes that indicates the path from start to finish, using breadth-first search.
 
     def breadthFirstSearch(self, startNode, endNode):
-        pass
+        if self.__contains__(startNode) and self.__contains__(endNode):
+            ### keep track of visited nodes
+            visited = [False] * (len(self.nodeTable) + 1)
+
+            ### this is the list of the bfs path
+            bfs = []
+
+            ### this is the queue im gonna use to see which node i will visit
+            queue = [startNode]
+            node = startNode
+
+            while node != endNode:
+                edges = self.edgeMap.get(node)
+                for edge in edges:
+                    if not visited[int(edge.dest)]:
+                        queue.append(edge.dest)
+                        self.getNode(edge.dest).parent = node
+                        visited[int(edge.dest)] = True
+                node = queue.pop(0)
+
+            node = self.getNode(node)
+            while node.name != startNode:
+                bfs.append(node.name)
+                node = self.getNode(node.parent)
+            bfs.append(node.name)
+            return bfs[::-1]
+        return []
 
     ### inputs are the name of a startNode and endNode. Given this,
     ### return a list of Nodes that indicates the path from start to finish, using depth-first search.
 
     def depthFirstSearch(self, startNode, endNode):
-        pass
+        if self.__contains__(startNode) and self.__contains__(endNode):
+            ### keep track of visited nodes
+            visited = [False] * (len(self.nodeTable) + 1)
+
+            ### this is the list of the bfs path
+            dfs = []
+
+            ### this is the queue im gonna use to see which node i will visit
+            queue = [startNode]
+            node = startNode
+
+            while node != endNode:
+                edges = self.edgeMap.get(node)
+                for edge in edges:
+                    if not visited[int(edge.dest)]:
+                        queue.append(edge.dest)
+                        self.getNode(edge.dest).parent = node
+                        visited[int(edge.dest)] = True
+                node = queue.pop()
+
+            node = self.getNode(node)
+            while node.name != startNode:
+                dfs.append(node.name)
+                node = self.getNode(node.parent)
+            dfs.append(node.name)
+            return dfs[::-1]
+        return []
 
     ### implement Djikstra's all-pairs shortest-path algorithm.
     ### https://yourbasic.org/algorithms/graph/#dijkstra-s-algorithm
@@ -105,4 +158,9 @@ class Graph():
 if __name__ == '__main__':
     g = Graph()
     g.readFromFile("soc-tribes.edges")
-    print("hello")
+    bfs = g.breadthFirstSearch("1", "10")
+    dfs = g.depthFirstSearch("1", "10")
+
+    print("bfs from 1 -> 10: " + str(bfs))
+    print("dfs from 1 -> 10: " + str(dfs))
+
