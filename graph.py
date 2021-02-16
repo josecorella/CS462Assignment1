@@ -3,6 +3,8 @@
 
 ## helper class representing a node in a graph. For the moment, nodes
 ## only have names. Later, we will add state variables.
+import sys
+
 
 class Node():
     def __init__(self, n):
@@ -137,9 +139,21 @@ class Graph():
     ### implement Djikstra's all-pairs shortest-path algorithm.
     ### https://yourbasic.org/algorithms/graph/#dijkstra-s-algorithm
     ### return the array of distances and the array previous nodes.
-
     def djikstra(self, startNode):
-        pass
+        q = self.edgeMap
+        dist = []
+        parent = []
+        for v in q:
+            dist.append(sys.maxsize)
+            parent.append(None)
+        dist[int(startNode) - 1] = 0
+
+        for n in q:
+            for i in q.get(n):
+                if dist[int(n) - 1] + int(i.weight) < dist[int(i.dest) - 1]:
+                    dist[int(i.dest) - 1] = dist[int(n) - 1] + int(i.weight)
+                    parent[int(i.dest) - 1] = n
+        return dist, parent
 
     ### takes as input a starting node, and computes the minimum spanning tree, using Prim's algorithm.
     ### https:// en.wikipedia.org/wiki/Prim % 27s_algorithm
@@ -160,6 +174,7 @@ if __name__ == '__main__':
     g.readFromFile("soc-tribes.edges")
     bfs = g.breadthFirstSearch("1", "10")
     dfs = g.depthFirstSearch("1", "10")
+    d_cost, d_parent = g.djikstra("1")
 
     print("bfs from 1 -> 10: " + str(bfs))
     print("dfs from 1 -> 10: " + str(dfs))
