@@ -4,22 +4,24 @@
 ## helper class representing a node in a graph. For the moment, nodes
 ## only have names. Later, we will add state variables.
 
-class Node() :
+class Node():
     def __init__(self, n):
         self.name = n
 
     def __hash__(self):
         return hash(self.name)
 
+
 ### an edge is a link between two nodes. Right now, the only other
 ### information an edge carries is the weight of the link. Later we
 ### will add other annotations.
 
-class Edge() :
-    def __init__(self, src,dest, weight) :
+class Edge():
+    def __init__(self, src, dest, weight):
         self.src = src
         self.dest = dest
         self.weight = weight
+
 
 ### The graph class itself.
 ### The nodeTable is a dictionary that maps names to Node objects.
@@ -27,7 +29,7 @@ class Edge() :
 
 ### The edgeMap is a dictionary that maps nodes to lists of Edges emanating from that node.
 
-class Graph() :
+class Graph():
 
     def __init__(self):
         self.nodeTable = {}
@@ -38,21 +40,20 @@ class Graph() :
         return item in self.nodeTable
 
     def getNode(self, src):
-        return nodeList[src]
+        return self.nodeTable[src]
 
     def addNode(self, src):
-        if src not in self.nodeTable :
+        if src not in self.nodeTable:
             self.nodeTable[src] = Node(src)
 
     def addEdge(self, src, dest, weight):
-        e = Edge(src,dest,weight)
+        e = Edge(src, dest, weight)
         self.addNode(src)
         self.addNode(dest)
-        if src in self.edgeMap :
+        if src in self.edgeMap:
             self.edgeMap[src].append(e)
-        else :
+        else:
             self.edgeMap[src] = [e]
-
 
     ## Assume file is in the mtx format: % is a comment
     ## Otherwise it's source destination weight
@@ -61,11 +62,12 @@ class Graph() :
     ### if there's an edge from a to b, there's an edge from b to a.
     ### You can find lots of others here: http://networkrepository.com/index.php
     def readFromFile(self, fname):
-        with open(fname) as f :
-            for l in f.readlines() :
-                if not l.startswith("%") :
-                    (s,d,w) = l.split()
-                    self.addEdge(s,d,w)
+        with open(fname) as f:
+            for line in f.readlines():
+                if not line.startswith("%"):
+                    (s, d, w) = line.split()
+                    self.addEdge(s, d, w)
+                    self.addEdge(d, s, w)
 
     ### inputs are the name of a startNode and endNode. Given this,
     ### return a list of Nodes that indicates the path from start to finish, using breadth-first search.
@@ -98,3 +100,9 @@ class Graph() :
 
     def clique(self, startNode):
         pass
+
+
+if __name__ == '__main__':
+    g = Graph()
+    g.readFromFile("soc-tribes.edges")
+    print("hello")

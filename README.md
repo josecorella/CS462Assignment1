@@ -1,4 +1,4 @@
-### Assignment 1: Introduction
+### Assignment 1: Introduction - José Corella
 
 ##### Due: Tuesday 2/16 at the start of class. (2:40pm)
 
